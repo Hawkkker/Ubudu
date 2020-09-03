@@ -39,7 +39,6 @@ export class ConnectionService {
     this.http.post('http://localhost:4000/users/register', {username: username, password: password})
     .subscribe(
       res => {
-        this.user = res;
         this.router.navigate(['questionnaire'])
       },
       err => {
@@ -49,6 +48,18 @@ export class ConnectionService {
   }
 
   submit(participation: IParticipation) {
-
+    this.http.put('http://localhost:4000/users/'+ this.user.id, {participation}, {headers: {
+      'Content-Type': 'application/json',
+      'Authorization': this.user.token
+    }})
+    .subscribe(
+      res => {
+        this.user = res;
+        this.router.navigate(['questionnaire'])
+      },
+      err => {
+        console.log("An error occured :", err.message)
+        this.router.navigate(['login'])
+      });
   }
 }
